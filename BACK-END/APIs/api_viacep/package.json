@@ -1,9 +1,5 @@
 {
-  "dependencies": {
-    "ejs": "^4.0.1",
-    "express": "^5.2.1"
-  },
-  "name": "mvc",
+  "name": "api_viacep",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -14,5 +10,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.13"
+  }
 }
