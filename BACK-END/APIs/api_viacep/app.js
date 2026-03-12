@@ -10,6 +10,7 @@ app.get("/", async (req, res) => {
     res.json({
         message: "API de CEP funcionando!"
     })
+    
 })
 
 //novo endpoint para consumir a api via cep
@@ -23,7 +24,7 @@ app.get("/cep/:codigo", async (req, res) => {
     const bairro = data.bairro;
     const logradouro = data.logradouro;
 
-    res.json({
+    res.status(200).json({
         estado,
         cidade,
         bairro,
