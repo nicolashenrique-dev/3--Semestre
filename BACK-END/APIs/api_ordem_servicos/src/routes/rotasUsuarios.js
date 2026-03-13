@@ -49,7 +49,7 @@ router.post("/usuarios", async (req, res) => {
         // 2. Consulta parametrizada (A DEFESA CONTRA SQL INJECTION)
         // Usamos $1, $2, $3 para garantir que o banco trate os valores como dados, não como código
         const query = `
-            INSERT INTO teste (nome, email, senha) 
+            INSERT INTO usuarios (nome, email, senha) 
             VALUES ($1, $2, $3)
         `;
 
@@ -74,31 +74,38 @@ router.post("/usuarios", async (req, res) => {
 
 
 router.put("/usuarios/:id", async (req, res) => {
-
     const { id } = req.params;
-
     const { nome, email, senha } = req.body;
 
     try {
-        const verificar = await BD.query(`SELECT * FROM usuarios WHERE id_usuario = $1`, [id]);
+        if (!nome || !email || !senha) {
+            return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+        }
+
+        const verificar = await BD.query(
+            `SELECT * FROM usuarios WHERE id_usuario = $1`,
+            [id]
+        );
 
         if (verificar.rows.length === 0) {
             return res.status(404).json({ error: 'Usuario nao encontrado' });
         }
 
-        const query = `UPDATE usuarios SET nome = $1, email = $2, senha = $3 WHERE id_usuario = $4`;
+        const query = `
+            UPDATE usuarios 
+            SET nome = $1, email = $2, senha = $3 
+            WHERE id_usuario = $4 
+            RETURNING id_usuario AS id, nome, email
+        `;
         const valores = [nome, email, senha, id];
 
-        await BD.query(query, valores);
+        const resultado = await BD.query(query, valores);
 
-        res.status(200).json({ message: 'Usuario atualizado com sucesso' });
-    }
-    catch (error) {
+        res.status(200).json(resultado.rows[0]);  // ← retorna o usuário atualizado
+    } catch (error) {
         console.error('Erro ao atualizar usuario', error.message);
         res.status(500).json({ error: 'Erro ao atualizar usuario' });
     }
-
-
 });
 
 export default router;

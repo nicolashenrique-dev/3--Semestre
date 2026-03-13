@@ -15,6 +15,9 @@ import Aula08 from "./components/Aula08"
 import Aula09 from "./components/Aula09"
 import Aula09_ListaNomes from "./components/Aula09_lista"
 import Aula11 from "./components/Aula11"
+import Aula12 from "./components/Aula12"
+import Aula12_ViaCep from "./components/Aula12_ViaCep"
+import Aula12_Fakestore from "./components/Aula12_Fakestore"
 
 
 const App = () => {
@@ -40,6 +43,9 @@ const App = () => {
           <Aula09 />
           <Aula09_ListaNomes />
           <Aula11 />
+          <Aula12 />
+          <Aula12_ViaCep />
+          <Aula12_Fakestore />
 
         </div>
       </main>

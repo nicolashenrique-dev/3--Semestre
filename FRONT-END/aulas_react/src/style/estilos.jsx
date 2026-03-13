@@ -125,11 +125,9 @@ export const estilos = {
         border: '1px solid #ccc',
         width: '100%'
     },
-
-    checkbox_container: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px'
+    checkbox: {
+        width: '20px',
+        height: '20px'
     },
 
     lista_produtos: {

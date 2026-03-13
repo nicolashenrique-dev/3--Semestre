@@ -21,6 +21,11 @@ router.get("/ordens", async (req, res) => {
 router.post("/ordens", async (req, res) => {
     try {
         const { titulo, descricao, status, id_usuario } = req.body;
+        
+        if (!titulo || !descricao || !status || !id_usuario) {
+            return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+        }
+
         const query = `INSERT INTO ordem_servicos (titulo, descricao, status, id_usuario) VALUES ($1, $2, $3, $4)`;
         const valores = [titulo, descricao, status, id_usuario];
         await BD.query(query, valores);
@@ -36,9 +41,19 @@ router.put("/ordens/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const { titulo, descricao, status, id_usuario } = req.body;
+
+        if (!titulo || !descricao || !status || !id_usuario) {
+            return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+        }
+
         const query = `UPDATE ordem_servicos SET titulo = $1, descricao = $2, status = $3, id_usuario = $4 WHERE id_ordem = $5`;
         const valores = [titulo, descricao, status, id_usuario, id];
-        await BD.query(query, valores);
+        const resultado = await BD.query(query, valores);
+
+        if (resultado.rowCount === 0) {
+            return res.status(404).json({ error: 'Ordem não encontrada' });
+        }
+
         res.status(200).json({ message: 'Ordem atualizada com sucesso' });
     }
     catch (error) {
