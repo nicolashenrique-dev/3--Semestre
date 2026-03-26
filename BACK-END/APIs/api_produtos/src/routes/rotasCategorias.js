@@ -3,44 +3,44 @@ import { BD } from "../../db.js";
 
 const router = Router();
 
-router.get("/departamentos", async (req, res) => {
+router.get("/categorias", async (req, res) => {
     try {
-        const query = "SELECT * FROM departamentos ORDER BY id_departamentos";
+        const query = "SELECT * FROM categorias ORDER BY id_categoria";
         const result = await BD.query(query);
         res.status(200).json(result.rows);
     } catch (error) {
-        console.error('Erro ao listar departamentos:', error.message);
-        res.status(500).json({ error: 'Erro interno ao buscar departamentos' });
+        console.error('Erro ao listar categorias:', error.message);
+        res.status(500).json({ error: 'Erro interno ao buscar categorias' });
     }
 });
 
-router.post("/departamentos", async (req, res) => {
+router.post("/categorias", async (req, res) => {
     try {
         const { nome, descricao } = req.body;
 
         if (!nome || typeof nome !== "string" || nome.trim() === "") {
-            return res.status(400).json({ error: 'O campo \'nome\' é obrigatório e não pode ser vazio' });
+            return res.status(400).json({ error: 'O campo \'nome\' é obrigatório e deve ser um texto válido' });
         }
 
         const query = `
-            INSERT INTO departamentos (nome, descricao) 
+            INSERT INTO categorias (nome, descricao) 
             VALUES ($1, $2)
         `;
         const valores = [nome.trim(), descricao !== undefined ? descricao : null];
 
         await BD.query(query, valores);
 
-        res.status(201).json({ message: 'Departamento adicionado com sucesso' });
+        res.status(201).json({ message: 'Categoria adicionada com sucesso' });
     } catch (error) {
-        console.error('Erro ao adicionar departamento:', error.message);
+        console.error('Erro ao adicionar categoria:', error.message);
         if (error.code === "23505") {
-            return res.status(409).json({ error: 'Departamento com esse nome já existe' });
+            return res.status(409).json({ error: 'Categoria com este nome já existe' });
         }
-        res.status(500).json({ error: 'Erro interno ao adicionar departamento' });
+        res.status(500).json({ error: 'Erro interno ao adicionar categoria' });
     }
 });
 
-router.put("/departamentos/:id", async (req, res) => {
+router.put("/categorias/:id", async (req, res) => {
     const { id } = req.params;
     const { nome, descricao } = req.body;
 
@@ -50,19 +50,19 @@ router.put("/departamentos/:id", async (req, res) => {
         }
 
         const verificar = await BD.query(
-            `SELECT * FROM departamentos WHERE id_departamentos = $1`,
+            `SELECT * FROM categorias WHERE id_categoria = $1`,
             [id]
         );
 
         if (verificar.rows.length === 0) {
-            return res.status(404).json({ error: 'Departamento não encontrado' });
+            return res.status(404).json({ error: 'Categoria não encontrada' });
         }
 
         const query = `
-            UPDATE departamentos 
-            SET nome = $1, descricao = COALESCE($2, descricao) 
-            WHERE id_departamentos = $3 
-            RETURNING id_departamentos AS id, nome, descricao
+            UPDATE categorias 
+            SET nome = $1, descricao = $2
+            WHERE id_categoria = $3 
+            RETURNING id_categoria AS id, nome, descricao
         `;
         const valores = [nome.trim(), descricao !== undefined ? descricao : null, id];
 
@@ -70,12 +70,12 @@ router.put("/departamentos/:id", async (req, res) => {
 
         res.status(200).json(resultado.rows[0]);
     } catch (error) {
-        console.error('Erro ao atualizar departamento:', error.message);
-        res.status(500).json({ error: 'Erro interno ao atualizar departamento' });
+        console.error('Erro ao atualizar categoria:', error.message);
+        res.status(500).json({ error: 'Erro interno ao atualizar categoria' });
     }
 });
 
-router.patch("/departamentos/:id", async (req, res) => {
+router.patch("/categorias/:id", async (req, res) => {
     const { id } = req.params;
     const { nome, descricao } = req.body;
 
@@ -89,12 +89,12 @@ router.patch("/departamentos/:id", async (req, res) => {
         }
 
         const verificar = await BD.query(
-            `SELECT * FROM departamentos WHERE id_departamentos = $1`,
+            `SELECT * FROM categorias WHERE id_categoria = $1`,
             [id]
         );
 
         if (verificar.rows.length === 0) {
-            return res.status(404).json({ error: 'Departamento não encontrado' });
+            return res.status(404).json({ error: 'Categoria não encontrada' });
         }
 
         const valores = [];
@@ -119,38 +119,38 @@ router.patch("/departamentos/:id", async (req, res) => {
 
         valores.push(id);
         const query = `
-            UPDATE departamentos 
+            UPDATE categorias 
             SET ${campos.join(', ')} 
-            WHERE id_departamentos = $${contador} 
-            RETURNING id_departamentos AS id, nome, descricao
+            WHERE id_categoria = $${contador} 
+            RETURNING id_categoria AS id, nome, descricao
         `;
 
         const resultado = await BD.query(query, valores);
 
         res.status(200).json(resultado.rows[0]);
     } catch (error) {
-        console.error('Erro ao atualizar departamento:', error.message);
-        res.status(500).json({ error: 'Erro interno ao atualizar departamento' });
+        console.error('Erro ao atualizar categoria:', error.message);
+        res.status(500).json({ error: 'Erro interno ao atualizar categoria' });
     }
 });
 
-router.delete("/departamentos/:id", async (req, res) => {
+router.delete("/categorias/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
         const verificar = await BD.query(
-            `SELECT * FROM departamentos WHERE id_departamentos = $1`,
+            `SELECT * FROM categorias WHERE id_categoria = $1`,
             [id]
         );
 
         if (verificar.rows.length === 0) {
-            return res.status(404).json({ error: 'Departamento não encontrado' });
+            return res.status(404).json({ error: 'Categoria não encontrada' });
         }
 
         const query = `
-            DELETE FROM departamentos 
-            WHERE id_departamentos = $1 
-            RETURNING id_departamentos AS id
+            DELETE FROM categorias 
+            WHERE id_categoria = $1 
+            RETURNING id_categoria AS id
         `;
         const valores = [id];
 
@@ -158,8 +158,8 @@ router.delete("/departamentos/:id", async (req, res) => {
 
         res.status(200).json(resultado.rows[0]);
     } catch (error) {
-        console.error('Erro ao deletar departamento:', error.message);
-        res.status(500).json({ error: 'Erro interno ao deletar departamento' });
+        console.error('Erro ao deletar categoria:', error.message);
+        res.status(500).json({ error: 'Erro interno ao deletar categoria' });
     }
 });
 

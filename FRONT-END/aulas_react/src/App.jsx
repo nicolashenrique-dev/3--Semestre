@@ -18,6 +18,7 @@ import Aula11 from "./components/Aula11"
 import Aula12 from "./components/Aula12"
 import Aula12_ViaCep from "./components/Aula12_ViaCep"
 import Aula12_Fakestore from "./components/Aula12_Fakestore"
+import Aula13 from "./components/Aula13"
 
 
 const App = () => {
@@ -46,6 +47,7 @@ const App = () => {
           <Aula12 />
           <Aula12_ViaCep />
           <Aula12_Fakestore />
+          <Aula13 />
 
         </div>
       </main>

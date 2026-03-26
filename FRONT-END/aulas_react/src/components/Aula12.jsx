@@ -4,10 +4,17 @@ import { useState, useEffect } from "react";
 const Aula12 = () => {
     const [dados, setDados] = useState('')
     const buscarDados = async () => {
-        const resposta = await fetch("https://dog.ceo/api/breeds/image/random")
-        const dados = await resposta.json()
-        console.log(dados.message)
-        setDados(dados.message)
+        try {
+            const resposta = await fetch("https://dog.ceo/api/breeds/image/random")
+            if (!resposta.ok) {
+                throw new Error("Erro na rede ou CORS")
+            }
+            const dadosObtidos = await resposta.json()
+            setDados(dadosObtidos.message)
+        } catch (erro) {
+            console.error("Falha ao buscar cachorro:", erro)
+            setDados("https://via.placeholder.com/300?text=Erro+CORS+ou+Rede")
+        }
     }
 
     useEffect(() => {
@@ -22,7 +29,7 @@ const Aula12 = () => {
 
             <div>
                 <p>Imagem de cachorro</p>
-                <img src={dados} width={300} />
+                {dados ? <img src={dados} width={300} alt="Cachorro" /> : <p>Carregando...</p>}
                 <button onClick={buscarDados}>Exibir Mensagem</button>
             </div>
 

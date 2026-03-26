@@ -103,6 +103,92 @@ const documentacao = {
                 },
             },
         },
+        "/usuarios/{id}": {
+            patch: {
+                tags: ["Usuários"],
+                summary: "Atualiza usuário específico",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID do usuário para atualização",
+                        schema: { type: "integer", example: 1 },
+                    },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: { $ref: "#/components/schemas/Atualizar_Usuarios" },
+                        },
+                        examples : {
+                            apenas_nome: {
+                                summary: "Atualiza apenas o nome",
+                                value: {nome: "Ana Silva Atualizado"}
+                            },
+                            apenas_email: {
+                                summary: "Atualiza apenas o email",
+                                value: {email: "ana.novo@email.com"}
+                            },
+                            apenas_senha: {
+                                summary: "Atualiza apenas a senha",
+                                value: {senha: "123456"}
+                            },
+                            todos_campos: {
+                                summary: "Atualiza todos os campos",
+                                value: {nome: "Ana Silva Atualizado", email: "ana.novo@email.com", senha: "123456"}
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: "Usuário atualizado com sucesso",
+                        content: {
+                            "application/json": {
+                                schema: { 
+                                    type: "object",
+                                    properties: {
+                                        id: { type: "integer", example: 1 },
+                                        nome: { type: "string", example: "Ana Silva Atualizado" },
+                                        email: { type: "string", example: "ana.novo@email.com" }
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            delete: {
+                tags: ["Usuários"],
+                summary: "Deleta usuário específico",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID do usuário para deleção",
+                        schema: { type: "integer", example: 1 },
+                    },
+                ],
+                responses: {
+                    200: {
+                        description: "Usuário deletado com sucesso",
+                        content: {
+                            "application/json": {
+                                schema: { 
+                                    type: "object",
+                                    properties: {
+                                        id: { type: "integer", example: 1 }
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
         "/departamentos": {
             get: {
                 tags: ["Departamentos"],
@@ -182,6 +268,82 @@ const documentacao = {
                                         id: { type: "integer", example: 1 },
                                         nome: { type: "string", example: "TI Premium" },
                                         descricao: { type: "string", example: "Desenvolvimento e Cloud", nullable: true }
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            patch: {
+                tags: ["Departamentos"],
+                summary: "Atualiza departamento parcialmente",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID do departamento existente",
+                        schema: { type: "integer", example: 1 },
+                    },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: { $ref: "#/components/schemas/Atualizar_Departamentos" },
+                            examples: {
+                                apenas_nome: {
+                                    summary: "Atualiza apenas o nome",
+                                    value: { nome: "TI Premium Atualizado" }
+                                },
+                                apenas_descricao: {
+                                    summary: "Atualiza apenas a descrição",
+                                    value: { descricao: "Nova descrição" }
+                                }
+                            }
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: "Departamento atualizado",
+                        content: {
+                            "application/json": {
+                                schema: { 
+                                    type: "object",
+                                    properties: {
+                                        id: { type: "integer", example: 1 },
+                                        nome: { type: "string", example: "TI Premium" },
+                                        descricao: { type: "string", example: "Desenvolvimento e Cloud", nullable: true }
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            delete: {
+                tags: ["Departamentos"],
+                summary: "Deleta departamento específico",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID do departamento para deleção",
+                        schema: { type: "integer", example: 1 },
+                    },
+                ],
+                responses: {
+                    200: {
+                        description: "Departamento deletado com sucesso",
+                        content: {
+                            "application/json": {
+                                schema: { 
+                                    type: "object",
+                                    properties: {
+                                        id: { type: "integer", example: 1 }
                                     }
                                 },
                             },
@@ -272,6 +434,79 @@ const documentacao = {
                     },
                 },
             },
+            patch: {
+                tags: ["Ordens"],
+                summary: "Atualiza status/dados da OS parcialmente",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        schema: { type: "integer", example: 1 },
+                    },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: { $ref: "#/components/schemas/Atualizar_Ordens" },
+                            examples: {
+                                apenas_status: {
+                                    summary: "Atualiza apenas o status",
+                                    value: { status: "Fechada" }
+                                }
+                            }
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: "OS Atualizada",
+                        content: {
+                            "application/json": {
+                                schema: { 
+                                    type: "object",
+                                    properties: {
+                                        id: { type: "integer", example: 1 },
+                                        titulo: { type: "string", example: "Reparo de Rede" },
+                                        descricao: { type: "string", example: "Cabo rompido no andar 2" },
+                                        status: { type: "string", example: "Fechada" },
+                                        id_usuario: { type: "integer", example: 1 }
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            delete: {
+                tags: ["Ordens"],
+                summary: "Deleta ordem específica",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID da ordem para deleção",
+                        schema: { type: "integer", example: 1 },
+                    },
+                ],
+                responses: {
+                    200: {
+                        description: "Ordem deletada com sucesso",
+                        content: {
+                            "application/json": {
+                                schema: { 
+                                    type: "object",
+                                    properties: {
+                                        id: { type: "integer", example: 1 }
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         },
     },
     components: {
@@ -295,6 +530,15 @@ const documentacao = {
                 },
             },
             Atualizar_Usuarios: {
+                type: "object",
+                required: ["nome", "email", "senha"],
+                properties: {
+                    nome: { type: "string", example: "Ana Silva Atualizado" },
+                    email: { type: "string", example: "ana.novo@email.com" },
+                    senha: { type: "string", example: "novaSenha123" },
+                },
+            },
+            Atualizar_Usuarios_Patch: {
                 type: "object",
                 properties: {
                     nome: { type: "string", example: "Ana Silva Atualizado" },

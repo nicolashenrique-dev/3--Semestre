@@ -22,6 +22,10 @@ router.post("/usuarios", async (req, res) => {
             return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
         }
 
+        if (typeof nome !== 'string' || typeof email !== 'string' || typeof senha !== 'string') {
+            return res.status(400).json({ error: 'Tipos de dados inválidos' });
+        }
+
         const query = `
             INSERT INTO usuarios (nome, email, senha) 
             VALUES ($1, $2, $3)
@@ -168,6 +172,35 @@ router.delete("/usuarios/:id", async (req, res) => {
     } catch (error) {
         console.error('Erro ao deletar usuario', error.message);
         res.status(500).json({ error: 'Erro ao deletar usuario' });
+    }
+});
+
+
+//endpoint login
+
+router.post("/login", async (req, res) => {
+    try {
+        const { email, senha } = req.body;
+
+        if (!email || !senha) {
+            return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+        }
+
+        const query = `
+            SELECT id_usuario, nome, email FROM usuarios WHERE email = $1 AND senha = $2
+        `;
+        const valores = [email, senha];
+
+        const resultado = await BD.query(query, valores);
+
+        if (resultado.rows.length === 0) {
+            return res.status(401).json({ error: 'Email ou senha incorretos' });
+        }
+
+        res.status(200).json(resultado.rows[0]);
+    } catch (error) {
+        console.error('Erro ao fazer login', error.message);
+        res.status(500).json({ error: 'Erro ao fazer login' });
     }
 });
 

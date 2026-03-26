@@ -32,8 +32,13 @@ const Aula11_Cadastro = () => {
 
 
     useEffect(() => {
-        const listaSalva = JSON.parse(localStorage.getItem('listaProdutos') || '[]')
-        setListaProdutos(listaSalva)
+        try {
+            const listaSalva = JSON.parse(localStorage.getItem('listaProdutos') || '[]')
+            const listaValida = Array.isArray(listaSalva) ? listaSalva.filter((item) => item !== null) : []
+            setListaProdutos(listaValida)
+        } catch (e) {
+            setListaProdutos([])
+        }
     }, [])
 
     const Limpar = () => {
@@ -118,16 +123,16 @@ const Aula11_Cadastro = () => {
             {/*listagem de produtos*/}
 
             <div>
-                {listaProdutos.map((produto, index) => (
+                {listaProdutos.map((produto, index) => produto ? (
                     <div key={index} style={estilos.cardProduto}>
                         <p>{produto.nome}</p>
-                        <img src={produto.url} style={estilos.imagem_produto} />
+                        {produto.url ? <img src={produto.url} style={estilos.imagem_produto} alt={produto.nome} /> : null}
                         <p>{produto.preco}</p>
                         <p>{produto.url_produto}</p>
                         <p>{produto.categoria}</p>
                         {produto.freteGratis ? <p>Frete grátis</p> : null}
                     </div>
-                ))}
+                ) : null)}
             </div>
 
         </div>
