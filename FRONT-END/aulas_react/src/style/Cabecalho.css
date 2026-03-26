@@ -1,0 +1,17 @@
+.cabecalho {
+    background-color: #e30613;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cabecalho img {
+    width: 50px;
+}
+
+.cabecalho div {
+    text-align: center;
+}

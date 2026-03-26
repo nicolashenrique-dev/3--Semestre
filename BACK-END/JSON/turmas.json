@@ -1,0 +1,27 @@
+{
+    "simples": "Olá Mundo!",
+    "alunos": [
+        {
+            "nome": "Nicolas",
+            "idade": 17,
+            "curso": "ADS"
+        },
+        {
+            "nome": "Carlos",
+            "idade": 18,
+            "curso": "ADS"
+        },
+        {
+            "nome": "Maria",
+            "idade": 19,
+            "curso": "ADS"
+        }
+    ],
+    "ObjetoDentro": {
+        "nome": "Nicolas",
+        "curso": {
+            "nome": "ADS",
+            "turno": "Noturno"
+        }
+    }
+}
